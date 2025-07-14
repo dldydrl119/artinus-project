@@ -1,4 +1,4 @@
-# ARTINUS – 프론트엔드 개발 과제
+# ARTINUS – Frontend
 
  **기술 스택** 
  - Next.js 15 (App Router)
