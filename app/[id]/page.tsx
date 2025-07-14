@@ -1,23 +1,19 @@
-// app/[id]/page.tsx
-
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { Product, RouteParams } from '@/types/product'; // 경로는 형님 프로젝트 기준으로 수정해주세요
+import { Product, RouteParams } from '@/types/product';
 
-// 상품 데이터 fetch 함수
 async function fetchProduct(id: string): Promise<Product | null> {
   const res = await fetch(`https://dummyjson.com/products/${id}`);
   if (!res.ok) return null;
   return res.json();
 }
 
-// 서버 컴포넌트: 동적 라우팅 대응
 export default async function ProductDetailPage({
   params,
 }: {
-  params: Promise<RouteParams>; // Next.js 15 이상에서 필수
+  params: Promise<RouteParams>;
 }) {
-  const { id } = await params; // params는 반드시 await
+  const { id } = await params;
 
   const product = await fetchProduct(id);
   if (!product) notFound();

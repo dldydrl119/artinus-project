@@ -4,7 +4,6 @@ import { Listbox } from '@headlessui/react';
 import { useState } from 'react';
 import { ChevronUpDownIcon } from '@heroicons/react/20/solid';
 
-/* 공통 옵션 타입 */
 export type SortKey = 'default' | 'price_asc' | 'price_desc' | 'rating_desc';
 
 const options: { name: string; value: SortKey }[] = [

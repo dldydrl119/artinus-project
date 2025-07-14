@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata = {
   title: 'ARTINUS Catalog',
-  description: '모던한 상품 리스트 & 상세 페이지 과제',
+  description: '상품 리스트 & 상세 페이지',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
