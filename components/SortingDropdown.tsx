@@ -4,15 +4,24 @@ import { Listbox } from '@headlessui/react';
 import { useState } from 'react';
 import { ChevronUpDownIcon } from '@heroicons/react/20/solid';
 
-const options = [
+/* 공통 옵션 타입 */
+export type SortKey = 'default' | 'price_asc' | 'price_desc' | 'rating_desc';
+
+const options: { name: string; value: SortKey }[] = [
   { name: '기본 정렬', value: 'default' },
   { name: '가격 낮은순', value: 'price_asc' },
   { name: '가격 높은순', value: 'price_desc' },
   { name: '평점 높은순', value: 'rating_desc' },
 ];
 
-export default function SortingDropdown({ onChange }: { onChange: (value: string) => void }) {
-  const [selected, setSelected] = useState(options[0]);
+export default function SortingDropdown({
+  onChange,
+  value,
+}: {
+  value: SortKey;
+  onChange: (value: SortKey) => void;
+}) {
+  const [selected, setSelected] = useState(options.find(o => o.value === value) ?? options[0]);
 
   const handleChange = (option: typeof selected) => {
     setSelected(option);

@@ -5,10 +5,9 @@ import { useSearchParams } from 'next/navigation';
 import debounce from 'lodash.debounce';
 import ProductCard from '@/components/ProductCard';
 import SidebarCategory from '@/components/SidebarCategory';
-import SortingDropdown from '@/components/SortingDropdown';
+import SortingDropdown, { SortKey } from '@/components/SortingDropdown';
 import type { Product } from '@/types/product';
 import LoadingSpinner from '@/components/LoadingSpinner';
-
 
 const LIMIT = 20;
 const KRW_RATE = 1350;
@@ -18,13 +17,12 @@ export default function Home() {
   const [skip, setSkip] = useState(0);
   const [total, setTotal] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
-  const [sort, setSort] = useState<'default' | 'price_asc' | 'price_desc' | 'rating_desc'>('default');
+  const [sort, setSort] = useState<SortKey>('default');
 
   const searchParams = useSearchParams();
   const category = searchParams?.get('category') || '';
   const sentryRef = useRef<HTMLDivElement | null>(null);
 
-  // fetchProducts 안정화 및 의존성 정리
   const fetchProducts = useCallback(async () => {
     if (loading) return;
     setLoading(true);
@@ -32,7 +30,7 @@ export default function Home() {
     const query = category ? `&category=${category}` : '';
     const res = await fetch(`https://dummyjson.com/products?limit=${LIMIT}&skip=${skip}${query}`);
     const data = await res.json();
-    let list: Product[] = data.products;
+    const list: Product[] = data.products;
 
     if (sort === 'price_asc') list.sort((a, b) => a.price - b.price);
     if (sort === 'price_desc') list.sort((a, b) => b.price - a.price);
@@ -49,21 +47,18 @@ export default function Home() {
     setLoading(false);
   }, [category, skip, sort, loading]);
 
-  // 필터나 정렬 변경 시 초기화
   useEffect(() => {
     setProducts([]);
     setSkip(0);
     setTotal(null);
   }, [category, sort]);
 
-  // 첫 진입 시 자동 호출
   useEffect(() => {
     if (products.length === 0 && skip === 0) {
       fetchProducts();
     }
   }, [products.length, skip, fetchProducts]);
 
-  // IntersectionObserver + debounce
   useEffect(() => {
     const node = sentryRef.current;
     if (!node) return;
@@ -92,7 +87,7 @@ export default function Home() {
       <SidebarCategory />
       <section className="flex-1 flex flex-col">
         <div className="mb-6 flex justify-end">
-          <SortingDropdown onChange={v => setSort(v as any)} />
+          <SortingDropdown value={sort} onChange={setSort} />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
