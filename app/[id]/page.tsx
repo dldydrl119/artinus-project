@@ -1,18 +1,25 @@
+// app/[id]/page.tsx
+
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
+import { Product, RouteParams } from '@/types/product'; // 경로는 형님 프로젝트 기준으로 수정해주세요
 
-interface Props {
-  params: { id: string };
-}
-
-async function fetchProduct(id: string) {
+// 상품 데이터 fetch 함수
+async function fetchProduct(id: string): Promise<Product | null> {
   const res = await fetch(`https://dummyjson.com/products/${id}`);
   if (!res.ok) return null;
   return res.json();
 }
 
-export default async function ProductDetailPage({ params }: Props) {
-  const product = await fetchProduct(params.id);
+// 서버 컴포넌트: 동적 라우팅 대응
+export default async function ProductDetailPage({
+  params,
+}: {
+  params: Promise<RouteParams>; // Next.js 15 이상에서 필수
+}) {
+  const { id } = await params; // params는 반드시 await
+
+  const product = await fetchProduct(id);
   if (!product) notFound();
 
   return (
@@ -27,9 +34,10 @@ export default async function ProductDetailPage({ params }: Props) {
             className="object-contain"
           />
         </div>
+
         {/* 썸네일 리스트 */}
         <div className="flex gap-2 overflow-x-auto">
-          {product.images?.slice(0, 4).map((img: string, i: number) => (
+          {product.images?.slice(0, 4).map((img, i) => (
             <div key={i} className="relative w-20 h-20 rounded overflow-hidden border">
               <Image src={img} alt={`thumb-${i}`} fill className="object-cover" />
             </div>
@@ -47,7 +55,7 @@ export default async function ProductDetailPage({ params }: Props) {
 
         {/* 해시태그 */}
         <div className="flex flex-wrap gap-2 mt-2">
-          {product.tags?.map((tag: string) => (
+          {product.tags?.map((tag) => (
             <span
               key={tag}
               className="inline-block bg-gray-100 text-gray-600 px-3 py-1 text-xs rounded-full"
@@ -57,6 +65,7 @@ export default async function ProductDetailPage({ params }: Props) {
           ))}
         </div>
 
+        {/* 버튼 */}
         <div className="mt-10">
           <div className="flex gap-4">
             <button className="flex-1 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700">
@@ -67,7 +76,6 @@ export default async function ProductDetailPage({ params }: Props) {
             </button>
           </div>
         </div>
-
       </div>
     </div>
   );

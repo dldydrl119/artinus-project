@@ -1,56 +1,48 @@
 # ARTINUS Frontend – DummyJson Products Catalog
 
-## 1. 개발 환경
-| 항목 | 버전 |
-|------|------|
-| Node | 22.x |
-| PNPM/NPM | npm 10.x |
-| Framework | **Next.js 15 (App Router + Turbopack)** |
-| Styling | **Tailwind CSS 3.4**, Headless UI, Heroicons |
-| Lint/Type Check | ESLint 9, TypeScript 5 |
-| 기타 | lodash.debounce (무한스크롤 최적화) |
+> **과제 목표**  
+> DummyJson Products API를 연동해 **상품 목록**·**상세 페이지**를 구현하고
+> 무한 스크롤·로딩 UX·정적 배포까지 적용한 SPA를 제작
 
 ---
 
-## 2. 프로젝트 구조 (중요 파일만)
+## 1. 개발 환경
 
-```
+| 항목 | 버전 / 스택 |
+| :-- | :-- |
+| Node | **22.x** |
+| 패키지 매니저 | **npm 10.x** |
+| 프레임워크 | **Next.js 15 (App Router + Turbopack)** |
+| 스타일 | **Tailwind CSS 3.4**, Headless UI, Heroicons |
+| 타입·린트 | TypeScript 5, ESLint 9 |
+| 기타 | lodash.debounce (무한 스크롤 최적화) |
+
+---
+
+## 2. 프로젝트 구조 (핵심 파일)
+
+```text
 .
-├── app/
-│   ├── [id]/
-│   │   ├── loading.tsx            # 상세 페이지 로딩 스켈레톤 (RSC)
-│   │   └── page.tsx               # 상품 상세 페이지
-│   ├── globals.css                # 글로벌 스타일 (Tailwind)
-│   ├── layout.tsx                 # 글로벌 레이아웃 (헤더/푸터 포함)
-│   └── page.tsx                   # 상품 리스트 페이지 + Lazy Load
-
-├── components/
-│   ├── Footer.tsx                 # 하단 공통 컴포넌트
-│   ├── Header.tsx                 # 상단 네비게이션
-│   ├── LoadingSpinner.tsx        # 로딩 스피너
-│   ├── ProductCard.tsx           # 상품 카드 컴포넌트
-│   ├── SidebarCategory.tsx       # 좌측 카테고리 필터
-│   └── SortingDropdown.tsx       # 정렬 옵션 드롭다운
-
-├── public/
-│   ├── file.svg
-│   ├── globe.svg
-│   ├── next.svg
-│   ├── vercel.svg
-│   └── window.svg
-
-├── types/
-│   └── product.ts                # 상품 타입 정의
-
-├── .gitignore
-├── eslint.config.mjs
-├── next-env.d.ts
-├── next.config.ts
-├── package.json
-├── postcss.config.js
-├── readme.md
-├── tailwind.config.ts
-└── tsconfig.json
+├─ app/
+│  ├─ [id]/
+│  │  ├─ loading.tsx        # 상세 Skeleton (RSC)
+│  │  └─ page.tsx           # 상품 상세 (SSR, force-dynamic)
+│  ├─ layout.tsx            # 전역 레이아웃 (Header / Footer)
+│  ├─ page.tsx              # 상품 리스트 + Lazy Load
+│  └─ globals.css           # Tailwind base
+│
+├─ components/
+│  ├─ Header.tsx            # 상단 내비
+│  ├─ Footer.tsx            # 하단 정보
+│  ├─ SidebarCategory.tsx   # 좌측 카테고리 필터
+│  ├─ SortingDropdown.tsx   # 정렬 드롭다운
+│  ├─ ProductCard.tsx       # 목록 카드
+│  └─ LoadingSpinner.tsx    # 공통 스피너
+│
+├─ types/product.ts         # Product · RouteParams 타입
+├─ tailwind.config.ts
+├─ next.config.ts           # remote image 패턴
+└─ ...
 ```
 
 
